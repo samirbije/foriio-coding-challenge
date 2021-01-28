@@ -35,12 +35,11 @@ export class Renderer extends React.Component<{}, State> {
                     location: data.profile.location,
                 })
             })
-        this.callUsersWorks();
+        this.callUsersWorks(id);
 
     }
 
-    callUsersWorks() {
-        const id = this.getUrlId();
+    public callUsersWorks = (id: any) => {
         let url = `${baseApiUrl}/users/${id}/works`;
         const self = this;
 
@@ -52,7 +51,7 @@ export class Renderer extends React.Component<{}, State> {
             })
     }
 
-    public getUrlId() {
+    public getUrlId = () => {
         var urlParam = window.location.pathname.split("/").pop();
         return urlParam;
     }
