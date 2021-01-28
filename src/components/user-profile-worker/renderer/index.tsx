@@ -10,7 +10,9 @@ export class Renderer extends React.Component<{}, State> {
         this.state = {
             id: '',
             title: '',
-            description: ''
+            description: '',
+            thumbnail: '',
+            published_at: ''
 
         };
 
@@ -27,7 +29,9 @@ export class Renderer extends React.Component<{}, State> {
                 self.setState({
                     title: data.work.title,
                     id: data.work.id,
-                    description: data.work.description
+                    description: data.work.description,
+                    published_at: data.work.published_at,
+                    thumbnail: data.work.thumbnail
                 })
             })
 
@@ -67,7 +71,15 @@ export class Renderer extends React.Component<{}, State> {
             <div className="well">
                 <div>
                     Title :   {this.state.title}
-                    description :   {this.state.description}
+                </div>
+                <div>
+                    Description :   {this.state.description}
+                </div>
+                <div>
+                    Published :   {this.state.published_at}
+                </div>
+                <div>
+                    <img src={this.state.thumbnail} />
                 </div>
 
             </div >
@@ -79,6 +91,8 @@ interface State {
     id: string;
     title: string;
     description: string;
+    published_at: string;
+    thumbnail: string
 }
 
 

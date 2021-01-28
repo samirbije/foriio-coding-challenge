@@ -5,7 +5,7 @@
 import { assert } from 'chai';
 import * as sinon from 'sinon';
 
-import { Renderer } from '../../../user-profile-worker/renderer/index';
+import { Renderer } from '../../../user-profile/renderer/index';
 
 describe('testing events of message form page', () => {
   const state = {

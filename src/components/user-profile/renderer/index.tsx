@@ -12,9 +12,9 @@ export class Renderer extends React.Component<{}, State> {
             contact_email: '',
             location: '',
             profession: '',
+            works: [],
             page: 1,
             pageNum: 0,
-
         };
 
     }
@@ -25,31 +25,31 @@ export class Renderer extends React.Component<{}, State> {
         let url = `${baseApiUrl}/users/${id}/profile`;
         const self = this;
 
-        let api_call = fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-
-        api_call.then((resp) => resp.json())
+        callAPI(url)
             .then(function (data) {
                 self.setState({
                     name: data.profile.name,
                     id: data.profile.id,
+                    contact_email: data.profile.contact_email,
+                    profession: data.profile.profession,
+                    location: data.profile.location,
                 })
-            }).catch((err) => {
-                console.log("Api call error !!")
-            });
+            })
+        this.callUsersWorks();
 
-        // await callAPI(url)
-        //     .then(function (data) {
-        //         self.setState({
-        //             name: data.profile.name,
-        //             id: data.profile.id
-        //         })
-        //     })
+    }
 
+    callUsersWorks() {
+        const id = this.getUrlId();
+        let url = `${baseApiUrl}/users/${id}/works`;
+        const self = this;
+
+        callAPI(url)
+            .then(function (data) {
+                self.setState({
+                    works: data.works
+                })
+            })
     }
 
     public getUrlId() {
@@ -58,13 +58,55 @@ export class Renderer extends React.Component<{}, State> {
     }
 
     public render() {
-        const url = `/pages/user-profile-worker/${this.state.id}`;
+        var newData = this.state.works;
+
+        let per_page = 500;
+        const pages = newData && newData.length && Math.ceil(this.state.works.length / per_page);
+        const current_page = this.state.page;
+        const start_offset = (current_page - 1) * per_page;
+        let start_count = 0;
 
         return (
             <div className="well" >
                 <div>
-                    <a href={url}> {this.state.name} </a>
+                    Name : {this.state.name}
                 </div>
+                <div>
+                    Email : {this.state.contact_email}
+                </div>
+                <div>
+                    Location : {this.state.location}
+                </div>
+                <div>
+                    Profession : {this.state.profession}
+                </div>
+                <br />
+                <div>
+                    {this.state.name} Work
+                </div>
+                <br />
+                <table id="userTable" className="table table-bordered table-stripped results">
+                    <tbody>
+
+                        {newData && newData.length > 0 ? newData.map((item, idx) => {
+                            if (idx >= start_offset && start_count < per_page) {
+                                start_count++;
+                                const url = `/pages/user-profile-worker/${item.id}`;
+                                return (
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                {item.title}
+                                                <a href={url}> <img src={item.thumbnail} /></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                        })
+                            : null}
+                    </tbody>
+                </table>
 
             </div >
         );
@@ -77,9 +119,19 @@ interface State {
     contact_email: string;
     location: string;
     profession: string;
+    works: Worrk[];
     page: number;
     pageNum: number;
 }
 
+interface Worrk {
+    id: number;
+    title: string;
+    published_at: string;
+    thumbnail: string;
+    category_list: string;
+    user_roles: string;
+
+}
 
 

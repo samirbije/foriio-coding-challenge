@@ -17,6 +17,7 @@ export class Renderer extends React.Component<{}, State> {
     }
 
     public async componentDidMount() {
+
         let url = `${baseApiUrl}/promoted/users`;
         const self = this;
 
